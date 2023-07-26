@@ -4,17 +4,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                // make git clone
+                git branch: 'main', credentialsId: 'e418357a-642f-4b88-a517-bb26bf80511e', url: 'https://github.com/Abdullah-Salhab/orange.git'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                sh 'docker build -t image-from-jenkins:v1 .'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                echo 'Done image creation'
             }
         }
     }
