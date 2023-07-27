@@ -8,14 +8,22 @@ pipeline {
                 git branch: 'main', credentialsId: 'e418357a-642f-4b88-a517-bb26bf80511e', url: 'https://github.com/Abdullah-Salhab/orange.git'
             }
         }
-        stage('Test') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker build -t image-from-jenkins:v1 .'
+                script{
+                    def customImageTag = "abdallahsalhab/orange-httpd:abd"
+                    docker.build(customImageTag,'.')
+                }
             }
         }
-        stage('Deploy') {
+        stage('Push docker image') {
             steps {
-                echo 'Done image creation'
+                script{
+                    def customImageTag = "abdallahsalhab/orange-httpd:abd"
+                    withDockerRegistry(credentialsId: 'e418357a-642f-4b88-a517-bb26bf80511e') {
+                        docker.image(customImageTag).push()
+                    }
+                }
             }
         }
     }
